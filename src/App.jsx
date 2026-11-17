@@ -9,6 +9,7 @@ import Process from './components/Process'
 import TrustSection from './components/TrustSection'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
+import WhatsAppFloat from './components/WhatsAppFloat'
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
         <CTA />
       </main>
       <Footer />
+      <WhatsAppFloat />
     </MotionConfig>
   )
 }

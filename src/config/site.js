@@ -23,6 +23,13 @@ export const PROFILE = {
 
 export const PLACEHOLDER = '[preencher]'
 
+/**
+ * Campo de PROFILE vazio: no site publicado ele NÃO aparece (nada de "[preencher]" na tela do cliente).
+ * No `npm run dev` continua visível, para você lembrar do que falta preencher.
+ */
+export const SHOW_PLACEHOLDERS = Boolean(import.meta.env?.DEV)
+export const shouldShow = (value) => Boolean(value) || SHOW_PLACEHOLDERS
+
 export const WHATSAPP_URL = `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(
   SITE.whatsappMessage,
 )}`
@@ -37,6 +44,7 @@ export const NAV_LINKS = [
 
 export const IMAGES = {
   logo: '/images/logo.png',
-  profissional: '/images/rafael-profissional.png',
-  terno: '/images/rafael-terno.png',
+  // WebP (~80–110 KB cada). Os PNGs originais continuam em /public/images como backup.
+  profissional: '/images/rafael-profissional.webp',
+  terno: '/images/rafael-terno.webp',
 }

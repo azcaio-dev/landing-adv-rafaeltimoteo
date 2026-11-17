@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { IMAGES, PROFILE, PLACEHOLDER, SITE } from '../config/site'
+import { IMAGES, PROFILE, PLACEHOLDER, SITE, shouldShow } from '../config/site'
 import SectionIndex from './ui/SectionIndex'
 import { Reveal } from './ui/Reveal'
 
@@ -63,9 +63,11 @@ export default function About() {
 
             <Reveal delay={0.2} as="dl" className="mt-10 grid gap-x-8 sm:grid-cols-2">
               <Meta label="Atuação" value="Advogado" />
-              <Meta label="OAB/UF" value={PROFILE.oab} />
-              <Meta label="Especializações" value={PROFILE.especializacoes} />
-              <Meta label="Formação" value={PROFILE.formacao} />
+              {shouldShow(PROFILE.oab) && <Meta label="OAB/UF" value={PROFILE.oab} />}
+              {shouldShow(PROFILE.especializacoes) && (
+                <Meta label="Especializações" value={PROFILE.especializacoes} />
+              )}
+              {shouldShow(PROFILE.formacao) && <Meta label="Formação" value={PROFILE.formacao} />}
             </Reveal>
           </div>
         </div>

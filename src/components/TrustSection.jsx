@@ -3,7 +3,7 @@ import { Reveal } from './ui/Reveal'
 
 export default function TrustSection() {
   return (
-    <section aria-label="Princípios de atuação" className="section-clip relative py-[clamp(6rem,14vw,12rem)]">
+    <section aria-label="Princípios de atuação" className="section-clip relative py-[clamp(4.5rem,13vw,12rem)]">
       <div
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"

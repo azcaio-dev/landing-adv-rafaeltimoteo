@@ -32,7 +32,7 @@ Depois de definir o domínio, troque `SEU-DOMINIO.com.br` em `index.html`
 | Cores / tipografia / botões / cartões | `src/styles.css` e `src/index.css` (`@theme`) |
 | Desenho do brasão (3D **e** fallback) | `src/lib/emblem.js` |
 
-Preencheu um campo de `PROFILE`? O `[preencher]` some sozinho.
+Campo de `PROFILE` vazio fica oculto no site publicado; ao preencher, ele aparece sozinho.
 
 ## Estrutura
 
@@ -62,9 +62,17 @@ public/images/              logo.png · rafael-profissional.png · rafael-terno.
 
 ## Imagens
 
-Os três PNGs são usados exatamente como fornecidos. Pesam ~2 MB cada; carregam com
-`loading="lazy"` (exceto a logo do topo). Se quiser mais velocidade no celular, uma versão
-WebP/AVIF das fotos reduz o peso em ~90%.
+As duas fotos são servidas em **WebP** (`rafael-profissional.webp` ~80 KB e `rafael-terno.webp` ~110 KB,
+antes ~2 MB cada em PNG). Os PNGs originais continuam em `public/images/` só como backup — pode
+apagá-los do repositório se quiser. A logo segue em PNG (tem transparência) e é usada sem alterações.
 
-`public/og-image.png` (prévia de compartilhamento) e `public/favicon.svg` são gerados a partir
-da própria logo/brasão.
+`public/og-image.png` (prévia do WhatsApp/Instagram, 1200×630) e `public/favicon.svg` são gerados a partir
+da própria logo/brasão. Ao trocar a imagem de prévia, aumente o `?v=2` em `index.html`.
+
+## Antes de publicar
+
+`npm run build` avisa no terminal o que ainda falta. Em resumo:
+
+1. Trocar `PRODUCTION_URL` em `vite.config.js` pelo domínio final.
+2. Preencher `PROFILE` em `src/config/site.js` (OAB, especializações, formação).
+   Campo vazio **não aparece** no site publicado (no `npm run dev` aparece como `[preencher]`).

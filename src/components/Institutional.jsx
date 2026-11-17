@@ -1,4 +1,4 @@
-import { IMAGES, PROFILE, PLACEHOLDER, SITE, WHATSAPP_URL } from '../config/site'
+import { IMAGES, PROFILE, PLACEHOLDER, SITE, WHATSAPP_URL, shouldShow } from '../config/site'
 import { Reveal } from './ui/Reveal'
 import Button from './ui/Button'
 
@@ -24,10 +24,13 @@ export default function Institutional() {
               <div>
                 <p className="font-display text-[1.7rem] leading-tight text-ivory">{SITE.name}</p>
                 <p className="mt-1 text-[0.72rem] uppercase tracking-[0.26em] text-gold-light">
-                  Advogado{' '}
-                  <span className={PROFILE.oab ? '' : 'placeholder-text normal-case tracking-normal'}>
-                    · {PROFILE.oab || `OAB/UF ${PLACEHOLDER}`}
-                  </span>
+                  Advogado
+                  {shouldShow(PROFILE.oab) && (
+                    <span className={PROFILE.oab ? '' : 'placeholder-text normal-case tracking-normal'}>
+                      {' '}
+                      · {PROFILE.oab || `OAB/UF ${PLACEHOLDER}`}
+                    </span>
+                  )}
                 </p>
               </div>
               <Button href={WHATSAPP_URL} external variant="ghost" size="sm">

@@ -1,6 +1,6 @@
 import { MessageCircle } from 'lucide-react'
 import Logo from './Logo'
-import { INSTAGRAM_URL, NAV_LINKS, PROFILE, PLACEHOLDER, SITE, WHATSAPP_URL } from '../config/site'
+import { INSTAGRAM_URL, NAV_LINKS, PROFILE, PLACEHOLDER, SITE, WHATSAPP_URL, shouldShow } from '../config/site'
 
 function InstagramIcon() {
   return (
@@ -50,10 +50,12 @@ export default function Footer() {
                   <span className="sr-only"> (abre em nova aba)</span>
                 </a>
               </li>
-              <li className="mt-2 text-[0.92rem] text-ash">
-                <span className="text-[0.66rem] uppercase tracking-[0.26em] text-gold-light">OAB/UF </span>
-                <span className={PROFILE.oab ? '' : 'placeholder-text'}>{PROFILE.oab || PLACEHOLDER}</span>
-              </li>
+              {shouldShow(PROFILE.oab) && (
+                <li className="mt-2 text-[0.92rem] text-ash">
+                  <span className="text-[0.66rem] uppercase tracking-[0.26em] text-gold-light">OAB/UF </span>
+                  <span className={PROFILE.oab ? '' : 'placeholder-text'}>{PROFILE.oab || PLACEHOLDER}</span>
+                </li>
+              )}
             </ul>
           </div>
         </div>

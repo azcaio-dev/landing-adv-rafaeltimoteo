@@ -48,7 +48,6 @@ function buildScaleGeometry() {
     finial: new THREE.SphereGeometry(0.06, 20, 14),
     plinth: new THREE.CylinderGeometry(1.05, 1.12, 0.14, 64),
     ring: new THREE.TorusGeometry(1.05, 0.012, 8, 96),
-    sheet: new THREE.BoxGeometry(0.9, 1.25, 0.012),
     cone: new THREE.ConeGeometry(1.7, 5.2, 40, 1, true),
   }
 }
@@ -58,14 +57,21 @@ const WARM = new THREE.Color('#ffdba0')
 
 function Scene({ progress, reduced, q }) {
   const size = useThree((s) => s.size)
-  const wide = size.width / size.height > 1.05
+  const aspect = size.width / size.height
+  const wide = aspect > 1.05
+
+  // Enquadramento: a balança mede ~3,9 unidades de largura. Calculamos a escala e o deslocamento
+  // pela largura visível na câmera (fov 32°, ~7,9 de distância), para nunca cortar os pratos
+  // nas bordas — nem no celular em pé, nem em telas 4:3.
+  const halfW = 2.267 * aspect
+  const groupX = wide ? halfW * 0.42 : 0
+  const groupScale = wide ? Math.min(1, (halfW * 0.95 - groupX) / 1.95) : Math.min(0.9, (halfW * 0.94) / 1.95)
 
   const plinth = useRef(null)
   const post = useRef(null)
   const beam = useRef(null)
   const panL = useRef(null)
   const panR = useRef(null)
-  const sheets = useRef(null)
   const key = useRef(null)
   const p = useRef(reduced ? 1 : 0)
   const clock = useRef(0)
@@ -76,7 +82,6 @@ function Scene({ progress, reduced, q }) {
     return {
       ...base,
       line: new THREE.LineBasicMaterial({ color: '#B8945A', transparent: true, opacity: 0.7 }),
-      paper: new THREE.MeshStandardMaterial({ color: '#e7e0d0', roughness: 0.85, metalness: 0 }),
       beam: new THREE.MeshBasicMaterial({
         color: '#d8bc83', transparent: true, opacity: 0.045, side: THREE.DoubleSide,
         depthWrite: false, blending: THREE.AdditiveBlending,
@@ -104,7 +109,6 @@ function Scene({ progress, reduced, q }) {
     plinth.current?.scale.setScalar(Math.max(s(0, 0.14), 0.001))
     if (post.current) post.current.scale.y = Math.max(s(0.02, 0.3), 0.001)
     beam.current?.scale.setScalar(Math.max(s(0.2, 0.5), 0.001))
-    sheets.current?.scale.setScalar(Math.max(s(0.35, 0.7), 0.001))
 
     // a balança começa desequilibrada (análise) e se estabiliza (orientação)
     const settle = s(0.5, 0.72)
@@ -112,12 +116,6 @@ function Scene({ progress, reduced, q }) {
     if (beam.current) beam.current.rotation.z = reduced ? 0 : a
     if (panL.current) panL.current.rotation.z = reduced ? 0 : -a
     if (panR.current) panR.current.rotation.z = reduced ? 0 : -a
-
-    if (sheets.current && !reduced) {
-      sheets.current.children.forEach((m, i) => {
-        m.position.y = (i === 0 ? 0.3 : -0.45) + Math.sin(t * 0.5 + i * 2) * 0.06
-      })
-    }
 
     // câmera: aproxima e orbita levemente conforme o scroll
     const cam = state.camera
@@ -146,7 +144,7 @@ function Scene({ progress, reduced, q }) {
         <Lightformer form="rect" intensity={0.7} color="#ffffff" position={[5, 1, -1]} scale={[6, 2, 1]} />
       </Environment>
 
-      <group position={[wide ? 1.7 : 0, wide ? -0.1 : 0.75, 0]} scale={wide ? 1 : 0.8}>
+      <group position={[groupX, wide ? -0.1 : 0.85, 0]} scale={groupScale}>
         <group ref={plinth} position={[0, -1.55, 0]}>
           <mesh geometry={geo.plinth} material={mats.dark} />
           <mesh geometry={geo.ring} material={mats.gold} position={[0, 0.07, 0]} rotation={[Math.PI / 2, 0, 0]} />
@@ -170,13 +168,6 @@ function Scene({ progress, reduced, q }) {
             <mesh geometry={geo.pan} material={mats.goldDouble} position={[0, -1, 0]} />
           </group>
         </group>
-
-        {q.tier !== 'low' && (
-          <group ref={sheets} position={[-2.6, 0, 0.4]}>
-            <mesh geometry={geo.sheet} material={mats.paper} position={[0, 0.3, 0]} rotation={[0.1, 0.55, 0.12]} />
-            <mesh geometry={geo.sheet} material={mats.paper} position={[-0.6, -0.45, -0.9]} rotation={[-0.1, 0.75, -0.2]} />
-          </group>
-        )}
 
         <mesh geometry={geo.cone} material={mats.beam} position={[0, 0.6, 0]} />
       </group>
